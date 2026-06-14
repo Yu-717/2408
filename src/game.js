@@ -12,8 +12,8 @@ let board = [];
 /** @type {number} 当前分数 */
 let score = 0;
 
-/** @type {number} 历史最高分 */
-let bestScore = parseInt(localStorage.getItem('best2048')) || 0;
+/** @type {number} 历史最大数字（最高分） */
+let bestScore = parseInt(localStorage.getItem('bestTile2048')) || 0;
 
 /** @type {number} 棋盘边长 */
 let size = 4;
@@ -300,9 +300,10 @@ function doMove(dir) {
  */
 function updateScoreDisplay() {
     document.getElementById('score').textContent = score;
-    if (score > bestScore) {
-        bestScore = score;
-        localStorage.setItem('best2048', bestScore);
+    const maxTile = getMaxTile();
+    if (maxTile > bestScore) {
+        bestScore = maxTile;
+        localStorage.setItem('bestTile2048', bestScore);
         document.getElementById('best').textContent = bestScore;
         // 破纪录特效：闪金色
         const bestBox = document.getElementById('best').parentElement;
