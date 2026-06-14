@@ -300,7 +300,6 @@ function doMove(dir) {
  * 更新分数显示，包含破纪录动画
  */
 function updateScoreDisplay() {
-    document.getElementById('score').textContent = score;
     const maxTile = getMaxTile();
     if (maxTile > bestScore) {
         bestScore = maxTile;
