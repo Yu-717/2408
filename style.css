@@ -1,0 +1,257 @@
+/**
+ * 2048 游戏样式
+ * @author 成员A
+ * @version 2.0.0
+ */
+
+/* ============ 基础 ============ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'PingFang SC', Arial, sans-serif;
+    background: #faf8ef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    user-select: none;
+}
+
+.container {
+    width: 500px;
+    max-width: 95vw;
+}
+
+/* ============ 头部 ============ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.title {
+    font-size: 60px;
+    font-weight: bold;
+    color: #776e65;
+}
+
+.scores {
+    display: flex;
+    gap: 10px;
+}
+
+.score-box {
+    background: #bbada0;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-align: center;
+    min-width: 80px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.score-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* ============ 破纪录动画 ============ */
+.score-box.best-new {
+    animation: bestGlow 0.8s ease;
+}
+
+@keyframes bestGlow {
+    0%, 100% { background: #bbada0; transform: scale(1); }
+    25%      { background: #edc22e; transform: scale(1.1); }
+    50%      { background: #f2b179; transform: scale(1.15); }
+    75%      { background: #edc22e; transform: scale(1.1); }
+}
+
+/* ============ 按钮 ============ */
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    background: #8f7a66;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn:hover { background: #9f8a76; }
+.btn:active { transform: scale(0.95); }
+
+.btn-undo {
+    background: #bbada0;
+}
+
+.btn-undo:hover {
+    background: #ccbcb0;
+}
+
+/* ============ 棋盘大小选择 ============ */
+.size-selector {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.size-btn {
+    background: #bbada0;
+    color: rgba(255,255,255,0.6);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.size-btn:hover {
+    color: white;
+    background: #9f8a76;
+}
+
+.size-btn.active {
+    background: #8f7a66;
+    color: white;
+    font-weight: bold;
+}
+
+/* ============ 棋盘 ============ */
+.board {
+    background: #bbada0;
+    border-radius: 10px;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    position: relative;
+}
+
+.cell {
+    background: rgba(238, 228, 218, 0.35);
+    border-radius: 6px;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    transition: all 0.12s ease;
+}
+
+/* ============ 数字颜色 ============ */
+.cell-2     { background: #eee4da; color: #776e65; }
+.cell-4     { background: #ede0c8; color: #776e65; }
+.cell-8     { background: #f2b179; color: #f9f6f2; }
+.cell-16    { background: #f59563; color: #f9f6f2; }
+.cell-32    { background: #f67c5f; color: #f9f6f2; }
+.cell-64    { background: #f65e3b; color: #f9f6f2; }
+.cell-128   { background: #edcf72; color: #f9f6f2; font-size: 28px; }
+.cell-256   { background: #edcc61; color: #f9f6f2; font-size: 28px; }
+.cell-512   { background: #edc850; color: #f9f6f2; font-size: 28px; }
+.cell-1024  { background: #edc53f; color: #f9f6f2; }
+.cell-2048  { background: #edc22e; color: #f9f6f2; }
+.cell-4096  { background: #3c3a32; color: #f9f6f2; font-size: 20px; }
+.cell-8192  { background: #3c3a32; color: #f9f6f2; font-size: 18px; }
+.cell-16384 { background: #3c3a32; color: #f9f6f2; }
+.cell-32768 { background: #3c3a32; color: #f9f6f2; }
+.cell-65536 { background: #3c3a32; color: #f9f6f2; }
+
+/* ============ 弹出动画 ============ */
+.cell-pop {
+    animation: pop 0.18s ease;
+}
+
+@keyframes pop {
+    0%   { transform: scale(0); }
+    50%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+/* ============ 游戏结束遮罩 ============ */
+.message {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(238, 228, 218, 0.73);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 44px;
+    font-weight: bold;
+    color: #776e65;
+    z-index: 10;
+    text-align: center;
+}
+
+.message.show { display: flex; }
+
+.message.win {
+    background: rgba(237, 194, 46, 0.5);
+    color: #f9f6f2;
+}
+
+.message button {
+    margin-top: 18px;
+    font-size: 17px;
+    padding: 10px 28px;
+    border: none;
+    background: #8f7a66;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.message button:hover { background: #9f8a76; }
+
+/* ============ 操作提示 ============ */
+.instructions {
+    margin-top: 16px;
+    color: #776e65;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.instructions kbd {
+    display: inline-block;
+    background: #8f7a66;
+    color: #f9f6f2;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin: 0 2px;
+}
+
+/* ============ 响应式（移动端） ============ */
+@media (max-width: 520px) {
+    .container { width: 96vw; }
+    .title { font-size: 40px; }
+    .cell { font-size: 24px; }
+    .cell-128, .cell-256, .cell-512 { font-size: 22px; }
+}

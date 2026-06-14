@@ -3,120 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2048 - AI驱动的开源游戏</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #faf8ef;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container { width: 500px; }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .title { font-size: 60px; font-weight: bold; color: #776e65; }
-        .scores { display: flex; gap: 10px; }
-        .score-box {
-            background: #bbada0;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-align: center;
-            min-width: 80px;
-        }
-        .score-label { font-size: 12px; text-transform: uppercase; }
-        .score-value { font-size: 24px; font-weight: bold; }
-        .new-game {
-            background: #8f7a66;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .new-game:hover { background: #9f8a76; }
-        .board {
-            background: #bbada0;
-            border-radius: 10px;
-            padding: 15px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            position: relative;
-        }
-        .cell {
-            background: rgba(238, 228, 218, 0.35);
-            border-radius: 6px;
-            aspect-ratio: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 36px;
-            font-weight: bold;
-            transition: all 0.15s ease;
-        }
-        .cell-2    { background: #eee4da; color: #776e65; }
-        .cell-4    { background: #ede0c8; color: #776e65; }
-        .cell-8    { background: #f2b179; color: #f9f6f2; }
-        .cell-16   { background: #f59563; color: #f9f6f2; }
-        .cell-32   { background: #f67c5f; color: #f9f6f2; }
-        .cell-64   { background: #f65e3b; color: #f9f6f2; }
-        .cell-128  { background: #edcf72; color: #f9f6f2; font-size: 30px; }
-        .cell-256  { background: #edcc61; color: #f9f6f2; font-size: 30px; }
-        .cell-512  { background: #edc850; color: #f9f6f2; font-size: 30px; }
-        .cell-1024 { background: #edc53f; color: #f9f6f2; font-size: 24px; }
-        .cell-2048 { background: #edc22e; color: #f9f6f2; font-size: 24px; }
-        .cell-pop { animation: pop 0.2s ease; }
-        @keyframes pop {
-            0%   { transform: scale(0); }
-            50%  { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .message {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(238, 228, 218, 0.73);
-            border-radius: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            font-size: 48px;
-            font-weight: bold;
-            color: #776e65;
-            z-index: 10;
-        }
-        .message.show { display: flex; }
-        .message button {
-            margin-top: 20px;
-            font-size: 18px;
-            padding: 10px 30px;
-            border: none;
-            background: #8f7a66;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .instructions {
-            margin-top: 20px;
-            color: #776e65;
-            text-align: center;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-    </style>
+    <title>2048 — AI驱动的开源游戏</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
+
+        <!-- 头部 -->
         <div class="header">
             <div class="title">2048</div>
             <div class="scores">
@@ -129,224 +22,46 @@
                     <div class="score-value" id="best">0</div>
                 </div>
             </div>
-            <button class="new-game" onclick="newGame()">新游戏</button>
         </div>
+
+        <!-- 操作按钮 -->
+        <div class="btn-group">
+            <button class="btn" onclick="window.game.newGame()">🔄 新游戏</button>
+            <button class="btn btn-undo" onclick="window.game.undoMove(); renderBoard();">↩ 撤销</button>
+        </div>
+
+        <!-- 棋盘大小选择 -->
+        <div class="size-selector">
+            <button class="size-btn" id="size-3" onclick="window.game.setBoardSize(3); renderBoard();">3×3</button>
+            <button class="size-btn active" id="size-4" onclick="window.game.setBoardSize(4); renderBoard();">4×4</button>
+            <button class="size-btn" id="size-5" onclick="window.game.setBoardSize(5); renderBoard();">5×5</button>
+        </div>
+
+        <!-- 棋盘 -->
         <div class="board" id="board">
             <div class="message" id="message"></div>
         </div>
-        <div class="instructions">↑ ↓ ← → 方向键移动 | 合并相同数字到达 <strong>2048</strong>！</div>
+
+        <!-- 操作说明 -->
+        <div class="instructions">
+            <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> 或 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 &nbsp;|&nbsp;
+            <kbd>Ctrl</kbd>+<kbd>Z</kbd> 撤销 &nbsp;|&nbsp;
+            触屏滑动可用 &nbsp;|&nbsp;
+            合并数字到达 <strong>2048</strong>！
+        </div>
+
     </div>
 
+    <!-- JS 模块（按顺序加载） -->
+    <script src="src/game.js"></script>
+    <script src="src/render.js"></script>
+    <script src="src/input.js"></script>
+
+    <!-- 启动游戏 -->
     <script>
-        // ============ 游戏状态 ============
-        let board = [];
-        let score = 0;
-        let bestScore = parseInt(localStorage.getItem('best2048')) || 0;
-        let size = 4;
-
-        // ============ 初始化 ============
-        function initBoard() {
-            board = Array.from({ length: size }, () => Array(size).fill(0));
-            score = 0;
-            document.getElementById('score').textContent = '0';
-            document.getElementById('best').textContent = bestScore;
-            document.getElementById('message').className = 'message';
-            spawnTile();
-            spawnTile();
-            renderBoard();
-        }
-
-        function newGame() {
-            initBoard();
-        }
-
-        // ============ 生成方块 ============
-        function spawnTile() {
-            const empty = [];
-            for (let r = 0; r < size; r++) {
-                for (let c = 0; c < size; c++) {
-                    if (board[r][c] === 0) empty.push({ r, c });
-                }
-            }
-            if (empty.length === 0) return false;
-            const { r, c } = empty[Math.floor(Math.random() * empty.length)];
-            board[r][c] = Math.random() < 0.9 ? 2 : 4;
-            return true;
-        }
-
-        // ============ 移动逻辑 ============
-        function slideRow(row) {
-            let arr = row.filter(v => v !== 0);
-            for (let i = 0; i < arr.length - 1; i++) {
-                if (arr[i] === arr[i + 1]) {
-                    arr[i] *= 2;
-                    score += arr[i];
-                    arr.splice(i + 1, 1);
-                }
-            }
-            while (arr.length < size) arr.push(0);
-            return arr;
-        }
-
-        function moveLeft() {
-            let moved = false;
-            for (let r = 0; r < size; r++) {
-                const oldRow = [...board[r]];
-                board[r] = slideRow(board[r]);
-                if (board[r].some((v, i) => v !== oldRow[i])) moved = true;
-            }
-            return moved;
-        }
-
-        function moveRight() {
-            let moved = false;
-            for (let r = 0; r < size; r++) {
-                const reversed = [...board[r]].reverse();
-                const slid = slideRow(reversed).reverse();
-                if (slid.some((v, i) => v !== board[r][i])) moved = true;
-                board[r] = slid;
-            }
-            return moved;
-        }
-
-        function moveUp() {
-            let moved = false;
-            for (let c = 0; c < size; c++) {
-                const col = board.map(row => row[c]);
-                const slid = slideRow(col);
-                for (let r = 0; r < size; r++) {
-                    if (board[r][c] !== slid[r]) moved = true;
-                    board[r][c] = slid[r];
-                }
-            }
-            return moved;
-        }
-
-        function moveDown() {
-            let moved = false;
-            for (let c = 0; c < size; c++) {
-                const col = board.map(row => row[c]).reverse();
-                const slid = slideRow(col).reverse();
-                for (let r = 0; r < size; r++) {
-                    if (board[r][c] !== slid[r]) moved = true;
-                    board[r][c] = slid[r];
-                }
-            }
-            return moved;
-        }
-
-        // ============ 胜负判定 ============
-        function checkWin() {
-            for (let r = 0; r < size; r++) {
-                if (board[r].includes(2048)) return true;
-            }
-            return false;
-        }
-
-        function checkLose() {
-            for (let r = 0; r < size; r++) {
-                for (let c = 0; c < size; c++) {
-                    if (board[r][c] === 0) return false;
-                    if (c < size - 1 && board[r][c] === board[r][c + 1]) return false;
-                    if (r < size - 1 && board[r][c] === board[r + 1][c]) return false;
-                }
-            }
-            return true;
-        }
-
-        // ============ 执行移动 ============
-        function doMove(dir) {
-            let moved = false;
-            switch (dir) {
-                case 'left':  moved = moveLeft();  break;
-                case 'right': moved = moveRight(); break;
-                case 'up':    moved = moveUp();    break;
-                case 'down':  moved = moveDown();  break;
-            }
-            if (moved) {
-                spawnTile();
-                renderBoard();
-                updateScore();
-                if (checkWin()) showMessage('🎉 你赢了！');
-                if (checkLose()) showMessage('😵 游戏结束');
-            }
-        }
-
-        // ============ 渲染 ============
-        function renderBoard() {
-            const boardEl = document.getElementById('board');
-            const msgEl = document.getElementById('message');
-            // 保留message元素
-            boardEl.innerHTML = '';
-            boardEl.appendChild(msgEl);
-            for (let r = 0; r < size; r++) {
-                for (let c = 0; c < size; c++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    if (board[r][c] !== 0) {
-                        cell.textContent = board[r][c];
-                        cell.classList.add('cell-' + board[r][c]);
-                        cell.classList.add('cell-pop');
-                    }
-                    boardEl.appendChild(cell);
-                }
-            }
-        }
-
-        function updateScore() {
-            document.getElementById('score').textContent = score;
-            if (score > bestScore) {
-                bestScore = score;
-                localStorage.setItem('best2048', bestScore);
-                document.getElementById('best').textContent = bestScore;
-            }
-        }
-
-        function showMessage(msg) {
-            const el = document.getElementById('message');
-            el.innerHTML = msg + '<br><button onclick="newGame()">再来一局</button>';
-            el.classList.add('show');
-        }
-
-        // ============ 键盘事件 ============
-        document.addEventListener('keydown', (e) => {
-            const keyMap = {
-                'ArrowLeft':  'left',
-                'ArrowRight': 'right',
-                'ArrowUp':    'up',
-                'ArrowDown':  'down',
-                'a': 'left', 'd': 'right', 'w': 'up', 's': 'down'
-            };
-            const dir = keyMap[e.key];
-            if (dir) {
-                e.preventDefault();
-                doMove(dir);
-            }
-        });
-
-        // ============ 触摸支持 ============
-        let touchStartX = 0, touchStartY = 0;
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        });
-        document.addEventListener('touchend', (e) => {
-            const dx = e.changedTouches[0].clientX - touchStartX;
-            const dy = e.changedTouches[0].clientY - touchStartY;
-            if (Math.abs(dx) > Math.abs(dy)) {
-                doMove(dx > 0 ? 'right' : 'left');
-            } else if (Math.abs(dy) > Math.abs(dx)) {
-                doMove(dy > 0 ? 'down' : 'up');
-            }
-        });
-
-        // ============ 启动 ============
-        initBoard();
-
-        // ============ 导出供测试使用 ============
-        if (typeof module !== 'undefined' && module.exports) {
-            module.exports = { initBoard, spawnTile, slideRow, moveLeft, moveRight, moveUp, moveDown, checkWin, checkLose, doMove };
-        }
+        window.game.initBoard(4);
+        renderBoard();
+        window.game.updateScoreDisplay();
     </script>
 </body>
 </html>
