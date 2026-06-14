@@ -76,6 +76,7 @@ function initBoard(newSize = 4) {
     hideMessage();
     spawnTile();
     spawnTile();
+    renderBoard();
 }
 
 /**
