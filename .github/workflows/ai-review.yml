@@ -182,4 +182,4 @@ jobs:
               repo: context.repo.repo,
               issue_number: prNumber,
               body
-            }).catch(err => console.log("createComment 警告（忽略）：", err.message);
+            }).catch(err => console.log("createComment 警告（忽略）：", err.message));
