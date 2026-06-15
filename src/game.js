@@ -351,6 +351,7 @@ window.game = {
     getBoardSize,
     getScore,
     getMaxTile,
+    updateScoreDisplay,
     get board() { return board; },
     get bestScore() { return bestScore; }
 };
