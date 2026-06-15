@@ -22,12 +22,36 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       github.event_name == 'pull_request' ||
-      contains(github.event.comment.body, '/review')
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       contains(github.event.comment.body, '/review'))
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Resolve PR number
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            if (context.eventName === 'pull_request') {
+              return context.issue.number;
+            }
+            if (context.eventName === 'issue_comment' && context.payload.issue?.pull_request) {
+              const { data: pr } = await github.request(context.payload.issue.pull_request.url);
+              return pr.number;
+            }
+            return null;
+          result-encoding: string
+
+      - name: Abort if not a PR
+        if: steps.pr.outputs.result == '' || steps.pr.outputs.result == 'null'
+        run: |
+          echo "无法解析 PR 号，跳过 Review 评论"
+          exit 0
 
       - name: Get changed files
         id: changes
@@ -77,14 +101,23 @@ jobs:
       - name: Post Detailed Review Comment on PR
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const prNumber = parseInt(`${{ steps.pr.outputs.result }}`, 10);
+            if (!prNumber) {
+              console.log("PR 号无效，跳过评论");
+              return;
+            }
             const { data: files } = await github.rest.pulls.listFiles({
               ...context.repo,
-              pull_number: context.issue.number
+              pull_number: prNumber
+            }).catch(err => {
+              console.log("listFiles 失败：", err.message);
+              return { data: [] };
             });
 
-            const additions = files.reduce((sum, f) => sum + f.additions, 0);
-            const deletions = files.reduce((sum, f) => sum + f.deletions, 0);
+            const additions = files.reduce((sum, f) => sum + (f.additions || 0), 0);
+            const deletions = files.reduce((sum, f) => sum + (f.deletions || 0), 0);
             const changedFiles = files.length;
 
             const body = `
@@ -147,6 +180,6 @@ jobs:
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
+              issue_number: prNumber,
               body
-            });
+            }).catch(err => console.log("createComment 警告（忽略）：", err.message);

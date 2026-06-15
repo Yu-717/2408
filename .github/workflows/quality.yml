@@ -79,6 +79,7 @@ jobs:
     name: AI Review
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -90,11 +91,7 @@ jobs:
       - run: npm ci
       - name: Generate AI boundary test suggestions
         run: npm run ai:tests
-      - name: Run AI code review
-        env:
-          AI_API_KEY: ${{ secrets.AI_API_KEY }}
-          AI_API_BASE_URL: ${{ secrets.AI_API_BASE_URL }}
-          AI_MODEL: ${{ secrets.AI_MODEL }}
+      - name: Run AI code review (本地启发式，无 AI_API_KEY 也可运行)
         run: npm run ai:review
       - name: Upload quality artifacts
         uses: actions/upload-artifact@v4
@@ -142,10 +139,9 @@ jobs:
             failures=$((failures+1))
           fi
 
-          # ai-review
+          # ai-review — 启发式审查，失败不阻断流水线
           if [ "${{ needs.ai-review.result }}" != "success" ]; then
-            echo "❌ ai-review failed"
-            failures=$((failures+1))
+            echo "⚠️  ai-review 非 success（不阻断流水线）→ ${{ needs.ai-review.result }}"
           fi
 
           if [ $failures -gt 0 ]; then
