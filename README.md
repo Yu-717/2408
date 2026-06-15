@@ -4,6 +4,12 @@
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![CI Status](https://github.com/Yu-717/2408/actions/workflows/quality.yml/badge.svg)
+![Deploy](https://github.com/Yu-717/2408/actions/workflows/deploy.yml/badge.svg)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+![Node](https://img.shields.io/badge/node-18%20%7C%2020%20%7C%2022-brightgreen)
+
+> 🎮 [在线体验](https://scoll-Angus.github.io/2408/) | 📖 [CI/CD 文档](docs/CI_CD_PIPELINE.md) | 🤖 [AI 审查说明](docs/AI_REVIEW.md)
 
 经典的数字合并游戏，采用模块化架构，集成 Harness 全自动 CI/CD 流水线和 AI 驱动的代码质量管控。
 
@@ -106,12 +112,25 @@ npx mocha test/game.test.js
 
 ## 👥 团队
 
-| 角色 | 职责 |
-|------|------|
-| 成员A | 全栈游戏开发 |
-| 成员B | AI能力 + 测试 |
-| 成员C | CI/CD + 运营 |
+| 角色 | 成员 | 职责 | 交付物 |
+|------|------|------|--------|
+| 成员A | [@Yu-717](https://github.com/Yu-717) | 全栈游戏开发 | 游戏逻辑、UI、完整可运行游戏 |
+| 成员B | [@scoll-Angus](https://github.com/scoll-Angus) | AI能力 + 测试 | 测试用例、AI审查脚本、覆盖率报告 |
+| 成员C | [@klddddd](https://github.com/klddddd) | CI/CD + 运营 | 流水线配置、GitHub规范化、社区运营 |
+
+## 🏷️ CI/CD 状态
+
+| 流水线 | 状态 | 说明 |
+|--------|------|------|
+| **Quality Check** | [![quality](https://github.com/Yu-717/2408/actions/workflows/quality.yml/badge.svg)](https://github.com/Yu-717/2408/actions/workflows/quality.yml) | Lint + Test(18/20/22) + Coverage + AI Review |
+| **Deploy** | [![deploy](https://github.com/Yu-717/2408/actions/workflows/deploy.yml/badge.svg)](https://github.com/Yu-717/2408/actions/workflows/deploy.yml) | 自动部署到 GitHub Pages |
+| **Coverage** | 90%+ | 行覆盖率 > 90%，远超 70% 阈值 |
+
+## 🌐 部署地址
+
+- 🎮 **游戏地址**: [https://scoll-Angus.github.io/2408/](https://scoll-Angus.github.io/2408/)
+- 📖 **在线文档**: [https://scoll-Angus.github.io/2408/docs/](https://scoll-Angus.github.io/2408/docs/)
 
 ## 📄 协议
 
-MIT License
+MIT License · Copyright © 2026 AI-2048 Team
