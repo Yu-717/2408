@@ -41,8 +41,13 @@ function localSuggestions() {
 
 async function aiSuggestions() {
     const apiKey = process.env.AI_API_KEY;
-    const source = fs.readFileSync(SOURCE_FILE, 'utf8').slice(0, 50000);
-    if (!apiKey || typeof fetch !== 'function') return localSuggestions();
+    let source = '';
+    try {
+        source = fs.readFileSync(SOURCE_FILE, 'utf8').slice(0, 50000);
+    } catch (_) {
+        source = '';
+    }
+    if (!source || !apiKey || typeof fetch !== 'function') return localSuggestions();
 
     const apiUrl = process.env.AI_API_BASE_URL || 'https://api.openai.com/v1/chat/completions';
     const model = process.env.AI_MODEL || 'gpt-4o-mini';

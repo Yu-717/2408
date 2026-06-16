@@ -1,0 +1,33 @@
+{
+  "projectName": "AI-2048",
+  "projectOwner": "Yu-717",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["README.md"],
+  "imageSize": 100,
+  "commit": false,
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "Yu-717",
+      "name": "成员A",
+      "avatar_url": "https://github.com/Yu-717.png",
+      "profile": "https://github.com/Yu-717",
+      "contributions": ["code", "design"]
+    },
+    {
+      "login": "scoll-Angus",
+      "name": "成员B",
+      "avatar_url": "https://github.com/scoll-Angus.png",
+      "profile": "https://github.com/scoll-Angus",
+      "contributions": ["test", "ai", "doc", "infra"]
+    },
+    {
+      "login": "klddddd",
+      "name": "成员C",
+      "avatar_url": "https://github.com/klddddd.png",
+      "profile": "https://github.com/klddddd",
+      "contributions": ["infra", "doc", "community", "maintenance"]
+    }
+  ]
+}
